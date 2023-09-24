@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:application.properties" />
+
+    <bean id="passwordValidatorNotEmpty" class="de.ait.shop.validation.impl.PasswordNotEmptyValidatorImpl"/>
+
+    <bean id="emailValidatorNotEmpty" class="de.ait.shop.validation.impl.EmailNotEmptyValidatorImpl"/>
+
+    <bean id="usersRepositoryList" class="de.ait.shop.repositories.impl.UsersRepositoryListImpl"/>
+
+    <bean id="passwordValidatorRegex" class="de.ait.shop.validation.impl.PasswordValidatorRegexImpl">
+        <property name="regex" value="${password.validator.regex}"/>
+    </bean>
+
+    <bean id="emailValidatorRegex" class="de.ait.shop.validation.impl.EmailValidatorRegexImpl">
+        <constructor-arg name="regex" value="${email.validator.regex}"/>
+    </bean>
+
+    <bean id="usersRepositoryFile" class="de.ait.shop.repositories.impl.UsersRepositoryFileImpl">
+        <constructor-arg name="fileName" value="users.txt"/>
+    </bean>
+
+    <bean id="usersService" class="de.ait.shop.services.impl.UsersServiceImpl">
+        <constructor-arg name="emailValidator" ref="emailValidatorRegex"/>
+        <constructor-arg name="passwordValidator" ref="passwordValidatorRegex"/>
+        <constructor-arg name="usersRepository" ref="usersRepositoryFile"/>
+    </bean>
+</beans>
